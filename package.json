@@ -1,0 +1,25 @@
+{
+  "name": "aws-cdk-playground",
+  "version": "0.1.0",
+  "bin": {
+    "aws-cdk-playground": "bin/aws-cdk-playground.js"
+  },
+  "scripts": {
+    "build": "tsc",
+    "deploy": "cdk deploy"
+  },
+  "devDependencies": {
+    "@aws-cdk/assert": "1.76.0",
+    "@types/node": "10.17.27",
+    "aws-cdk": "1.76.0",
+    "ts-node": "^9.0.0",
+    "typescript": "~3.9.7"
+  },
+  "dependencies": {
+    "@aws-cdk/core": "1.76.0",
+    "source-map-support": "^0.5.16"
+  },
+  "main": "index.js",
+  "author": "Bobby Cafazzo <robocafaz@gmail.com>",
+  "license": "MIT"
+}
