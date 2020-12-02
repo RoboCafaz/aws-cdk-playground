@@ -1,4 +1,5 @@
 import * as cdk from "@aws-cdk/core";
+import * as apigateway from "@aws-cdk/aws-apigateway";
 import * as lambda from "@aws-cdk/aws-lambda";
 import * as dynamodb from "@aws-cdk/aws-dynamodb";
 import * as path from "path";
@@ -49,5 +50,29 @@ export class AwsCdkPlaygroundStack extends cdk.Stack {
     });
     // Grant the lambda write permissions on the user table.
     userTable.grantWriteData(putUserLambda);
+
+    // API Gateway
+    const apiGateway = new apigateway.RestApi(this, "UserApi", {}); // This will automatically be exported from the stack.
+    // Create an API Gateway integration for the getUserLambda
+    const getLambdaIntegration = new apigateway.LambdaIntegration(
+      getUserLambda
+    );
+    // Create an API Gateway integration for the putUserLambda
+    const putLambdaIntegration = new apigateway.LambdaIntegration(
+      putUserLambda
+    );
+
+    // Add a "user" path to the API gateway
+    const userPath = apiGateway.root.addResource("user");
+    // Assign the putUserLambda integration to the "user" path PUT method
+    userPath.addMethod("PUT", putLambdaIntegration);
+
+    // Add a "user/{userId}" path to the API gateway by adding a sub-resource to
+    //   the root "user" path.
+    const userPathParameterized = userPath.addResource("{userId}");
+    // Assign the getUserLambda integration to the "user/{userId}" path GET method
+    userPathParameterized.addMethod("GET", getLambdaIntegration);
+    // Assign the putUserLambda integration to the "user/{userId}" path PUT method
+    userPathParameterized.addMethod("PUT", putLambdaIntegration);
   }
 }
