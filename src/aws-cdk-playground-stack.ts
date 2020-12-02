@@ -2,6 +2,8 @@ import * as cdk from "@aws-cdk/core";
 import * as lambda from "@aws-cdk/aws-lambda";
 import * as path from "path";
 
+const distFolder = path.join(__dirname, "../dist");
+
 export class AwsCdkPlaygroundStack extends cdk.Stack {
   constructor(scope: cdk.Construct, id: string, props?: cdk.StackProps) {
     super(scope, id, props);
@@ -13,7 +15,7 @@ export class AwsCdkPlaygroundStack extends cdk.Stack {
     new lambda.Function(this, "Add", {
       // By defining an "AssetCode" object, we can tell the CDK service
       //   to package the code in a given folder.
-      code: new lambda.AssetCode(path.join(__dirname, "/lambdas")),
+      code: new lambda.AssetCode(distFolder),
       // This lambda will run in a Node 12 environment.
       runtime: lambda.Runtime.NODEJS_12_X,
       // Tell the lambda what function to execute. All the code in

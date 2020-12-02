@@ -5,13 +5,20 @@
     "aws-cdk-playground": "bin/aws-cdk-playground.js"
   },
   "scripts": {
-    "build": "tsc",
-    "deploy": "cdk deploy"
+    "build": "rm -rf dist && rollup -c rollup.config.js",
+    "deploy": "yarn build && yarn cdk deploy"
   },
   "devDependencies": {
     "@aws-cdk/assert": "1.76.0",
+    "@babel/core": "^7.12.9",
+    "@babel/preset-env": "^7.12.7",
+    "@babel/preset-typescript": "^7.12.7",
+    "@rollup/plugin-babel": "^5.2.2",
+    "@rollup/plugin-node-resolve": "^11.0.0",
     "@types/node": "10.17.27",
     "aws-cdk": "1.76.0",
+    "aws-sdk": "^2.801.0",
+    "rollup": "^2.34.0",
     "ts-node": "^9.0.0",
     "typescript": "~3.9.7"
   },
@@ -21,7 +28,6 @@
     "source-map-support": "^0.5.16",
     "type-shift": "^0.1.0"
   },
-  "main": "index.js",
   "author": "Bobby Cafazzo <robocafaz@gmail.com>",
   "license": "MIT"
 }
