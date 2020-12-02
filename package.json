@@ -18,7 +18,8 @@
   "dependencies": {
     "@aws-cdk/aws-lambda": "^1.76.0",
     "@aws-cdk/core": "1.76.0",
-    "source-map-support": "^0.5.16"
+    "source-map-support": "^0.5.16",
+    "type-shift": "^0.1.0"
   },
   "main": "index.js",
   "author": "Bobby Cafazzo <robocafaz@gmail.com>",

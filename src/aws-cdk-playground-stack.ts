@@ -6,7 +6,7 @@ export class AwsCdkPlaygroundStack extends cdk.Stack {
   constructor(scope: cdk.Construct, id: string, props?: cdk.StackProps) {
     super(scope, id, props);
 
-    // Add a simple lambda that will add two numbers together
+    // Add a typed lambda that will add two numbers together
     //
     // Just by calling the constructor and passing "this" in, the lambda named
     //   "Add" will be added to the stack
