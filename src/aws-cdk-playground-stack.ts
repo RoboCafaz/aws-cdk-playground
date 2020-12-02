@@ -1,5 +1,6 @@
 import * as cdk from "@aws-cdk/core";
 import * as lambda from "@aws-cdk/aws-lambda";
+import * as dynamodb from "@aws-cdk/aws-dynamodb";
 import * as path from "path";
 
 const distFolder = path.join(__dirname, "../dist");
@@ -8,21 +9,45 @@ export class AwsCdkPlaygroundStack extends cdk.Stack {
   constructor(scope: cdk.Construct, id: string, props?: cdk.StackProps) {
     super(scope, id, props);
 
-    // Add a typed lambda that will add two numbers together
-    //
-    // Just by calling the constructor and passing "this" in, the lambda named
-    //   "Add" will be added to the stack
-    new lambda.Function(this, "Add", {
       // By defining an "AssetCode" object, we can tell the CDK service
       //   to package the code in a given folder.
+    const code = new lambda.AssetCode(distFolder);
+    // These lambdas will run in a Node 12 environment.
+    const runtime = lambda.Runtime.NODEJS_12_X;
+
+    // Add a typed lambda that will add two numbers together
+    new lambda.Function(this, "Add", {
       code: new lambda.AssetCode(distFolder),
-      // This lambda will run in a Node 12 environment.
       runtime: lambda.Runtime.NODEJS_12_X,
-      // Tell the lambda what function to execute. All the code in
-      //   the folder defined above will be exposed to the lambda,
-      //   so we have to tell it what file and what function in
-      //   the file to run.
       handler: "add.add",
     });
+
+    // Build a Dynamo Table that will hold user data.
+    const userTable = new dynamodb.Table(this, "UserTable", {
+      // Table only has one key: "userId".
+      partitionKey: { name: "userId", type: dynamodb.AttributeType.STRING },
+    });
+
+    // Lambda for fetching users.
+    const getUserLambda = new lambda.Function(this, "GetUser", {
+      code,
+      runtime,
+      handler: "user-actions.getUser",
+      // Pass in the name of the table as an env variable.
+      environment: { USER_TABLE: userTable.tableName },
+    });
+    // Grant the lambda read permissions on the user table.
+    userTable.grantReadData(getUserLambda);
+
+    // Lambda for posting users
+    const putUserLambda = new lambda.Function(this, "PutUser", {
+      code,
+      runtime,
+      handler: "user-actions.putUser",
+      // Pass in the name of the table as an env variable.
+      environment: { USER_TABLE: userTable.tableName },
+    });
+    // Grant the lambda write permissions on the user table.
+    userTable.grantWriteData(putUserLambda);
   }
 }

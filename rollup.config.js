@@ -3,9 +3,7 @@ import { nodeResolve } from "@rollup/plugin-node-resolve";
 
 const extensions = [".ts", ".js"];
 
-export default {
-  // Entry point for transpiled code
-  input: "src/lambdas/add.ts",
+const lambdaExport = {
   // Do not bundle these libraries (aws-sdk is included in all lambda runtimes)
   external: ["aws-sdk"],
   output: {
@@ -36,3 +34,18 @@ export default {
     }),
   ],
 };
+
+export default [
+  {
+    // Entry point for transpiled code
+    input: "src/lambdas/add.ts",
+    // Use our above-defined transpilation config
+    ...lambdaExport,
+  },
+  {
+    // Entry point for transpiled code
+    input: "src/lambdas/user-actions.ts",
+    // Use our above-defined transpilation config
+    ...lambdaExport,
+  },
+];
